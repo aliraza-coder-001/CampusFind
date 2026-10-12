@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}CampusFind | Browse Reports{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">SMART CAMPUS TOOL</p>
+    <h1>Lost something?<br><span>Let's help you find it.</span></h1>
+    <p class="subtext">Browse campus reports or submit a lost/found item report.</p>
+    <a class="primary-button" href="{{ url_for('add_report') }}">Submit a report</a>
+  </div>
+  <div class="hero-icon">⌕</div>
+</section>
+
+<section class="stats">
+  <div class="stat-card"><span>Total reports</span><strong>{{ total }}</strong></div>
+  <div class="stat-card"><span>Open reports</span><strong>{{ open_count }}</strong></div>
+  <div class="stat-card"><span>Resolved</span><strong>{{ resolved_count }}</strong></div>
+</section>
+
+<section class="section-head">
+  <div><p class="eyebrow">CAMPUS DATABASE</p><h2>Recent reports</h2></div>
+</section>
+<form class="filters" method="get" action="{{ url_for('index') }}">
+  <input type="text" name="search" placeholder="Search item, location, details..." value="{{ search }}">
+  <select name="type">
+    <option value="">All report types</option>
+    {% for t in ["Lost", "Found"] %}
+      <option value="{{ t }}" {% if selected_type == t %}selected{% endif %}>{{ t }}</option>
+    {% endfor %}
+  </select>
+  <select name="category">
+    <option value="">All categories</option>
+    {% for c in categories %}
+      <option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>
+    {% endfor %}
+  </select>
+  <button class="primary-button" type="submit">Search</button>
+  <a class="clear-link" href="{{ url_for('index') }}">Clear</a>
+</form>
+
+<div class="report-grid">
+{% for report in reports %}
+  <article class="report-card">
+    <div class="card-top">
+      <span class="type-pill {{ report['item_type']|lower }}">{{ report['item_type'] }}</span>
+      <span class="status {{ report['status']|lower }}">{{ report['status'] }}</span>
+    </div>
+    <h3>{{ report['item_name'] }}</h3>
+    <p class="category">{{ report['category'] }}</p>
+    <p class="detail"><b>Location:</b> {{ report['location'] }}</p>
+    <p class="detail"><b>Date:</b> {{ report['report_date'] }}</p>
+    <p class="description">{{ report['description'] }}</p>
+    <p class="contact"><b>Contact:</b> {{ report['contact'] }}</p>
+    <div class="card-actions">
+      <a class="secondary-button" href="{{ url_for('matches', report_id=report['id']) }}">Find matches</a>
+      {% if report['status'] == 'Open' %}
+      <form method="post" action="{{ url_for('resolve_report', report_id=report['id']) }}">
+        <button class="text-button" type="submit">Mark resolved</button>
+      </form>
+      {% endif %}
+    </div>
+  </article>
+{% else %}
+  <div class="empty-state">
+    <div class="empty-icon">⌕</div>
+    <h3>No reports found</h3>
+    <p>Try another search or submit the first report.</p>
+    <a class="primary-button" href="{{ url_for('add_report') }}">Add a report</a>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}CampusFind | Possible Matches{% endblock %}
+{% block content %}
+<div class="section-head">
+  <div><p class="eyebrow">SMART MATCHING</p><h1>Possible matches</h1>
+  <p class="subtext">Based on category and shared words. Always verify an item before claiming it.</p></div>
+</div>
+<div class="match-current">
+  <strong>Your report: {{ current['item_name'] }}</strong>
+  <span>{{ current['item_type'] }} · {{ current['category'] }} · {{ current['location'] }}</span>
+</div>
+<div class="report-grid">
+{% for report in matches %}
+  <article class="report-card">
+    <div class="card-top"><span class="type-pill {{ report['item_type']|lower }}">{{ report['item_type'] }}</span><span class="status {{ report['status']|lower }}">{{ report['status'] }}</span></div>
+    <h3>{{ report['item_name'] }}</h3>
+    <p class="category">{{ report['category'] }}</p>
+    <p class="detail"><b>Location:</b> {{ report['location'] }}</p>
+    <p class="detail"><b>Date:</b> {{ report['report_date'] }}</p>
+    <p class="description">{{ report['description'] }}</p>
+    <p class="contact"><b>Contact:</b> {{ report['contact'] }}</p>
+  </article>
+{% else %}
+  <div class="empty-state"><h3>No likely matches yet</h3><p>There are no open reports matching this category and item keywords.</p></div>
+{% endfor %}
+</div>
+<a class="secondary-button back-button" href="{{ url_for('index') }}">← Back to reports</a>
+{% endblock %}

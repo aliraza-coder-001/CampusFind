@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}CampusFind | Submit Report{% endblock %}
+{% block content %}
+<div class="form-wrap">
+  <p class="eyebrow">HELP THE CAMPUS COMMUNITY</p>
+  <h1>Submit an item report</h1>
+  <p class="subtext">Enter enough detail for another student to identify the item. Do not publish sensitive ID numbers.</p>
+  <form class="report-form" method="post">
+    <label>Report type
+      <select name="item_type" required>
+        {% for t in item_types %}<option value="{{ t }}">{{ t }} item</option>{% endfor %}
+      </select>
+    </label>
+    <label>Item name <input name="item_name" required maxlength="100" placeholder="e.g. Blue water bottle"></label>
+    <label>Category
+      <select name="category" required>
+        {% for c in categories %}<option value="{{ c }}">{{ c }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Location <input name="location" required maxlength="120" placeholder="e.g. Library, second floor"></label>
+    <label>Date lost/found <input type="date" name="report_date" required></label>
+    <label>Contact information <input name="contact" required maxlength="120" placeholder="University email or safe contact method"></label>
+    <label class="full">Description <textarea name="description" required rows="4" maxlength="600" placeholder="Describe colour, brand, or other identifying details"></textarea></label>
+    <div class="form-actions full">
+      <a class="secondary-button" href="{{ url_for('index') }}">Cancel</a>
+      <button class="primary-button" type="submit">Submit report</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
